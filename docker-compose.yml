@@ -1,0 +1,85 @@
+version: "2.4"
+
+services:
+  # 1. MySQL
+  db:
+    image: mysql:8.0
+    container_name: mysql-db
+    ports:
+      - "3308:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: 1234
+      MYSQL_USER: user
+      MYSQL_PASSWORD: 1234
+      MYSQL_DATABASE: local_test_database
+    volumes:
+      - mysql_data:/var/lib/mysql
+    cpus: 0.1
+    mem_limit: 512m
+
+  # 2. Redis
+  redis:
+    image: redis:7.0
+    container_name: redis-server
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    cpus: 0.1
+    mem_limit: 512m
+  # 3. Spring Boot App
+  server-app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: springboot-app
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://db:3306/local_test_database?serverTimezone=Asia/Seoul
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: 1234
+      SPRING_REDIS_HOST: redis
+      SPRING_REDIS_PORT: 6379
+      # 필요시 기타 Spring 환경변수...
+    depends_on:
+      - db
+      - redis
+    # CPU/메모리 제한 예시(선택)
+    cpus: 0.1
+    mem_limit: 512m
+  # 4. Prometheus
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: prometheus
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml:ro  # 우리가 정의한 설정 파일을 마운트
+      - prometheus_data:/prometheus
+    ports:
+      - "9090:9090"
+    command:
+      # config file 위치 지정 (기본값 /etc/prometheus/prometheus.yml)
+      - "--config.file=/etc/prometheus/prometheus.yml"
+    depends_on:
+      - server-app
+    cpus: 1
+    mem_limit: 512m
+
+  # 5. Grafana
+  grafana:
+    image: grafana/grafana-oss:latest
+    container_name: grafana
+    ports:
+      - "3000:3000"
+    volumes:
+      - grafana_data:/var/lib/grafana
+    depends_on:
+      - prometheus
+    cpus: 1
+    mem_limit: 512m
+
+volumes:
+  mysql_data:
+  redis_data:
+  prometheus_data:
+  grafana_data:

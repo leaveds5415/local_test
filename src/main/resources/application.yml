@@ -1,0 +1,20 @@
+spring:
+  application:
+    name: local_test
+  datasource:
+    url: jdbc:mysql://localhost:3307/local_test_database?serverTimezone=Asia/Seoul
+    username: root
+    password: 1234
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+server:
+  port: 8080
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"  # ?? Actuator endpoint? ?? (?????? ??? ?? ?? ??)
+  endpoint:
+    prometheus:
+      access: unrestricted
