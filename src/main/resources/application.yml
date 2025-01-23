@@ -27,7 +27,7 @@ management:
   endpoints:
     web:
       exposure:
-        include: "*"  # ?? Actuator endpoint? ?? (?????? ??? ?? ?? ??)
+        include: "*"
   endpoint:
     prometheus:
       access: unrestricted
