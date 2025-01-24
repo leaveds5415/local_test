@@ -15,7 +15,7 @@ services:
     volumes:
       - mysql_data:/var/lib/mysql
     cpus: 0.1
-    mem_limit: 512m
+    mem_limit: 256m
 
   # 2. Redis
   redis:
@@ -26,7 +26,7 @@ services:
     volumes:
       - redis_data:/data
     cpus: 0.1
-    mem_limit: 512m
+    mem_limit: 256m
 #  # 3. Spring Boot App
 #  server-app:
 #    build:
