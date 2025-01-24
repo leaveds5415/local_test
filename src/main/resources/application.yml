@@ -10,9 +10,9 @@ spring:
     hibernate:
       ddl-auto: create
     properties:
-      hibernate:
-        format_sql: true
-        show_sql: true
+#      hibernate:
+#        format_sql: true
+#        show_sql: true
         dialect: org.hibernate.dialect.MySQL8Dialect
   data:
     redis:
