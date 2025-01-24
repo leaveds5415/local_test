@@ -2,6 +2,8 @@ package com.example.local_test;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import java.util.List;
+
 public interface SampleRepository extends JpaRepository<Sample, Long> {
-    long countAllByNameContaining(String name);
+    List<Sample> findAllByNumber(long number);
 }
